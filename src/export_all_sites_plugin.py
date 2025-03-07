@@ -20,6 +20,7 @@ import ntpath
 import os
 import platform
 import shutil
+import subprocess
 import sys
 
 import besapi
@@ -88,9 +89,8 @@ def main():
     )
 
     parser.add_argument(
-        "-repo",
-        "--repo",
-        help="repo to clone and export into",
+        "--repo-subfolder",
+        help="subfolder to export to, then attempt to add, commit, push changes",
         required=False,
     )
 
@@ -126,6 +126,10 @@ def main():
 
     export_folder = os.path.join(invoke_folder, "export")
 
+    if args.repo_subfolder:
+        logging.debug("Repo Specified: %s", args.repo_subfolder)
+        export_folder = os.path.join(invoke_folder, args.repo_subfolder, "export")
+
     # if --delete arg used, delete export folder:
     if args.delete:
         shutil.rmtree(export_folder, ignore_errors=True)
@@ -138,6 +142,25 @@ def main():
     os.chdir(export_folder)
 
     bes_conn.export_all_sites()
+
+    if args.repo_subfolder:
+        logging.debug("Now attempting to add, commit, and push repo.")
+        git_path = shutil.which("git")
+        subprocess.run(
+            [git_path, "add", "."],
+            check=True,
+            stdout=subprocess.PIPE,
+        )
+        subprocess.run(
+            [git_path, "commit", "-m", "add changes from export"],
+            check=True,
+            stdout=subprocess.PIPE,
+        )
+        subprocess.run(
+            [git_path, "push"],
+            check=True,
+            stdout=subprocess.PIPE,
+        )
 
 
 if __name__ == "__main__":
