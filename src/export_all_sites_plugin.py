@@ -31,6 +31,8 @@ verbose = 0
 bes_conn = None
 invoke_folder = None
 
+GIT_PATHS = [r"C:\Program Files\Git\bin\git.exe", "/usr/bin/git"]
+
 
 def get_invoke_folder(verbose=0):
     """Get the folder the script was invoked from"""
@@ -69,6 +71,16 @@ def get_invoke_file_name(verbose=0):
 
     # get just the file name, return without file extension:
     return os.path.splitext(ntpath.basename(invoke_file_path))[0]
+
+
+def find_executable(path_array, default=None):
+    """find executable from array of paths"""
+
+    for path in path_array:
+        if path and os.path.isfile(path) and os.access(path, os.X_OK):
+            return path
+
+    return default
 
 
 def main():
@@ -144,10 +156,10 @@ def main():
     try:
         if args.repo_subfolder:
             git_path = shutil.which("git")
-            logging.debug("git found at: %s", git_path)
             if not git_path:
-                logging.warning("could not find git on path, just using `git`")
-                git_path = "git"
+                logging.warning("could not find git on path")
+                git_path = find_executable(GIT_PATHS, "git")
+            logging.info("Using this path to git: %s", git_path)
             logging.info("Now attempting to git pull repo.")
             subprocess.run([git_path, "pull"], check=True, capture_output=True)
 
