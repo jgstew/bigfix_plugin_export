@@ -169,6 +169,8 @@ def main():
             stdout=subprocess.PIPE,
         )
 
+    logging.info("----- Session Ended ------")
+
 
 if __name__ == "__main__":
     main()
