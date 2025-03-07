@@ -141,35 +141,39 @@ def main():
 
     os.chdir(export_folder)
 
-    if args.repo_subfolder:
-        git_path = shutil.which("git")
-        logging.info("Now attempting to git pull repo.")
-        subprocess.run(
-            [git_path, "pull"],
-            check=True,
-            stdout=subprocess.PIPE,
-        )
+    try:
+        if args.repo_subfolder:
+            git_path = shutil.which("git")
+            logging.debug("git found at: %s", git_path)
+            if not git_path:
+                logging.warning("could not find git on path, just using `git`")
+                git_path = "git"
+            logging.info("Now attempting to git pull repo.")
+            subprocess.run([git_path, "pull"], check=True, capture_output=True)
 
-    logging.info("Now exporting content to folder.")
-    bes_conn.export_all_sites()
+        logging.info("Now exporting content to folder.")
+        bes_conn.export_all_sites()
 
-    if args.repo_subfolder:
-        logging.info("Now attempting to add, commit, and push repo.")
-        subprocess.run(
-            [git_path, "add", "."],
-            check=True,
-            stdout=subprocess.PIPE,
-        )
-        subprocess.run(
-            [git_path, "commit", "-m", "add changes from export"],
-            check=True,
-            stdout=subprocess.PIPE,
-        )
-        subprocess.run(
-            [git_path, "push"],
-            check=True,
-            stdout=subprocess.PIPE,
-        )
+        if args.repo_subfolder:
+            logging.info("Now attempting to add, commit, and push repo.")
+            subprocess.run(
+                [git_path, "add", "."],
+                check=True,
+                stdout=subprocess.PIPE,
+            )
+            subprocess.run(
+                [git_path, "commit", "-m", "add changes from export"],
+                check=True,
+                stdout=subprocess.PIPE,
+            )
+            subprocess.run(
+                [git_path, "push"],
+                check=True,
+                stdout=subprocess.PIPE,
+            )
+    except BaseException as err:
+        logging.error(err)
+        raise
 
     logging.info("----- Session Ended ------")
 
