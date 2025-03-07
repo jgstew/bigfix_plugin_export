@@ -141,11 +141,18 @@ def main():
 
     os.chdir(export_folder)
 
+    if args.repo_subfolder:
+        git_path = shutil.which("git")
+        subprocess.run(
+            [git_path, "pull"],
+            check=True,
+            stdout=subprocess.PIPE,
+        )
+
     bes_conn.export_all_sites()
 
     if args.repo_subfolder:
         logging.debug("Now attempting to add, commit, and push repo.")
-        git_path = shutil.which("git")
         subprocess.run(
             [git_path, "add", "."],
             check=True,
