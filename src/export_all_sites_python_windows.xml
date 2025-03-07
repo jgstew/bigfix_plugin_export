@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<BESPluginRegistration>
+	<Name>export_all_sites</Name>
+	<Command>"C:\Program Files\Python311\python.exe" "C:\Program Files (x86)\BigFix Enterprise\BES Server\Applications\export_all_sites\export_all_sites.py" -besserver %BESHTTP% -r %RESTURL% -u %MOUSERNAME% -p %MOPASSWORD% -v -d</Command>
+	<Schedule>
+		<WaitPeriodSeconds>43200</WaitPeriodSeconds>
+	</Schedule>
+	<ForceKill>true</ForceKill>
+</BESPluginRegistration>
