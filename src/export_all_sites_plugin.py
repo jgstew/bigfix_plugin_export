@@ -160,29 +160,44 @@ def main():
                 logging.warning("could not find git on path")
                 git_path = find_executable(GIT_PATHS, "git")
             logging.info("Using this path to git: %s", git_path)
+
+            result = subprocess.run(
+                [git_path, "fetch", "origin"], check=True, capture_output=True
+            )
+            logging.debug(result)
+            result = subprocess.run(
+                [git_path, "reset", "--hard", "origin/main"],
+                check=True,
+                capture_output=True,
+            )
+            logging.debug(result)
             logging.info("Now attempting to git pull repo.")
-            subprocess.run([git_path, "pull"], check=True, capture_output=True)
+            result = subprocess.run([git_path, "pull"], check=True, capture_output=True)
+            logging.debug(result)
 
         logging.info("Now exporting content to folder.")
         bes_conn.export_all_sites()
 
         if args.repo_subfolder:
             logging.info("Now attempting to add, commit, and push repo.")
-            subprocess.run(
+            result = subprocess.run(
                 [git_path, "add", "."],
                 check=True,
                 stdout=subprocess.PIPE,
             )
-            subprocess.run(
+            logging.debug(result)
+            result = subprocess.run(
                 [git_path, "commit", "-m", "add changes from export"],
                 check=True,
                 stdout=subprocess.PIPE,
             )
-            subprocess.run(
+            logging.debug(result)
+            result = subprocess.run(
                 [git_path, "push"],
                 check=True,
                 stdout=subprocess.PIPE,
             )
+            logging.debug(result)
     except BaseException as err:
         logging.error(err)
         raise
