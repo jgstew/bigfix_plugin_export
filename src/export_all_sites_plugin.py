@@ -142,10 +142,6 @@ def main():
         logging.debug("Repo Specified: %s", args.repo_subfolder)
         export_folder = os.path.join(invoke_folder, args.repo_subfolder, "export")
 
-    # if --delete arg used, delete export folder:
-    if args.delete:
-        shutil.rmtree(export_folder, ignore_errors=True)
-
     try:
         os.mkdir(export_folder)
     except FileExistsError:
@@ -174,6 +170,10 @@ def main():
             logging.info("Now attempting to git pull repo.")
             result = subprocess.run([git_path, "pull"], check=True, capture_output=True)
             logging.debug(result)
+
+        # if --delete arg used, delete export folder:
+        if args.delete:
+            shutil.rmtree(export_folder, ignore_errors=True)
 
         logging.info("Now exporting content to folder.")
         bes_conn.export_all_sites()
