@@ -1,5 +1,5 @@
 """
-This will export all bigfix sites to a folder called `export`
+This will export all bigfix sites to a folder called `export`.
 
 This is equivalent of running `python -m besapi export_all_sites`
 
@@ -35,7 +35,7 @@ GIT_PATHS = [r"C:\Program Files\Git\bin\git.exe", "/usr/bin/git"]
 
 
 def get_invoke_folder(verbose=0):
-    """Get the folder the script was invoked from"""
+    """Get the folder the script was invoked from."""
     # using logging here won't actually log it to the file:
 
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
@@ -54,7 +54,7 @@ def get_invoke_folder(verbose=0):
 
 
 def get_invoke_file_name(verbose=0):
-    """Get the filename the script was invoked from"""
+    """Get the filename the script was invoked from."""
     # using logging here won't actually log it to the file:
 
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
@@ -74,7 +74,7 @@ def get_invoke_file_name(verbose=0):
 
 
 def find_executable(path_array, default=None):
-    """find executable from array of paths"""
+    """Find executable from array of paths."""
 
     for path in path_array:
         if path and os.path.isfile(path) and os.access(path, os.X_OK):
@@ -84,7 +84,7 @@ def find_executable(path_array, default=None):
 
 
 def main():
-    """Execution starts here"""
+    """Execution starts here."""
     print("main() start")
 
     print("NOTE: this script requires besapi v3.3.3+")
@@ -149,6 +149,9 @@ def main():
 
     os.chdir(export_folder)
 
+    # this will get changed later:
+    result = None
+
     try:
         if args.repo_subfolder:
             git_path = shutil.which("git")
@@ -158,18 +161,24 @@ def main():
             logging.info("Using this path to git: %s", git_path)
 
             result = subprocess.run(
-                [git_path, "fetch", "origin"], check=True, capture_output=True
+                [git_path, "fetch", "origin"],
+                check=True,
+                capture_output=True,
+                text=True,
             )
-            logging.debug(result)
+            logging.debug(result.stdout)
             result = subprocess.run(
                 [git_path, "reset", "--hard", "origin/main"],
                 check=True,
                 capture_output=True,
+                text=True,
             )
-            logging.debug(result)
+            logging.debug(result.stdout)
             logging.info("Now attempting to git pull repo.")
-            result = subprocess.run([git_path, "pull"], check=True, capture_output=True)
-            logging.debug(result)
+            result = subprocess.run(
+                [git_path, "pull"], check=True, capture_output=True, text=True
+            )
+            logging.debug(result.stdout)
 
         # if --delete arg used, delete export folder:
         if args.delete:
@@ -182,28 +191,44 @@ def main():
             logging.info("Now attempting to add, commit, and push repo.")
             result = subprocess.run(
                 [git_path, "add", "."],
-                check=True,
-                stdout=subprocess.PIPE,
+                check=False,
+                capture_output=True,
+                text=True,
             )
-            logging.debug(result)
+            logging.debug(result.stdout)
+
             result = subprocess.run(
                 [git_path, "commit", "-m", "add changes from export"],
-                check=True,
-                stdout=subprocess.PIPE,
+                check=False,
+                capture_output=True,
+                text=True,
             )
-            logging.debug(result)
+            logging.debug(result.stdout)
+            # stop without error if nothing to add, nothing to commit
+            if "nothing to commit" in result.stdout:
+                logging.info("No changes to commit.")
+                logging.info("----- Session Ended ------")
+                return 0
+
             result = subprocess.run(
                 [git_path, "push"],
-                check=True,
-                stdout=subprocess.PIPE,
+                check=False,
+                capture_output=True,
+                text=True,
             )
-            logging.debug(result)
+            logging.debug(result.stdout)
+    except subprocess.CalledProcessError as err:
+        logging.error("Subprocess error: %s", err)
+        logging.debug(result.stdout)
+        raise
     except BaseException as err:
-        logging.error(err)
+        logging.error("An error occurred: %s", err)
+        logging.debug(result.stdout)
         raise
 
     logging.info("----- Session Ended ------")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
