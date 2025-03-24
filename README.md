@@ -29,3 +29,20 @@ You can also just invoke it directly on the command line as well, like:
 `python export_all_sites_plugin.py -besserver %BESHTTP% -r %RESTURL% -u %MOUSERNAME% -p %MOPASSWORD% -v -d`
 
 You would need to substitute the variables in the %% for the actual values of the connection details and account you wish to use.
+
+---
+
+To setup as a bigfix server plugin service on the BigFix root server:
+
+- Setup BigFix server plugin service if not done so already
+- Install python or use pyinstaller to turn it into an executable.
+ - If installing python, then install dependencies as well.
+- Create a folder inside the Applications folder inside the BigFix Server folder
+ - C:\Program Files (x86)\BigFix Enterprise\BES Server\Applications\export_all_sites
+ - /var/opt/BESServer/Applications/export_all_sites
+- Put python script or binary in that folder
+- create a definition file in the config folder (see examples in src)
+ - C:\Program Files (x86)\BigFix Enterprise\BES Server\Applications\Config
+ - /var/opt/BESServer/Applications
+- check MFS log in logs folder for invocations
+- check export_all_sites log in the plugin folder for run logs
