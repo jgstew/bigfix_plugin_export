@@ -38,11 +38,11 @@ To setup as a bigfix server plugin service on the BigFix root server:
 - Install python or use pyinstaller to turn it into an executable.
   - If installing python, then install dependencies as well.
 - Create a folder inside the Applications folder inside the BigFix Server folder
-  - C:\Program Files (x86)\BigFix Enterprise\BES Server\Applications\export_all_sites
-  - /var/opt/BESServer/Applications/export_all_sites
+  - Windows: `C:\Program Files (x86)\BigFix Enterprise\BES Server\Applications\export_all_sites`
+  - Linux: `/var/opt/BESServer/Applications/export_all_sites`
 - Put python script or binary in that folder
 - create a definition file in the config folder (see examples in src)
-  - C:\Program Files (x86)\BigFix Enterprise\BES Server\Applications\Config
-  - /var/opt/BESServer/Applications
+  - Windows: `C:\Program Files (x86)\BigFix Enterprise\BES Server\Applications\Config`
+  - Linux: `/var/opt/BESServer/Applications`
 - check MFS log in logs folder for invocations
 - check export_all_sites log in the plugin folder for run logs
