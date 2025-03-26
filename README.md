@@ -35,6 +35,7 @@ You would need to substitute the variables in the %% for the actual values of th
 To setup as a bigfix server plugin service on the BigFix root server:
 
 - Setup BigFix server plugin service if not done so already
+  - https://support.hcl-software.com/csm?id=kb_article&sysparm_article=KB0023347
 - Install python or use pyinstaller to turn it into an executable.
   - If installing python, then install dependencies as well.
 - Create a folder inside the Applications folder inside the BigFix Server folder
