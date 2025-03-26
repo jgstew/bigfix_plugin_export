@@ -158,6 +158,10 @@ def main():
             if not git_path:
                 logging.warning("could not find git on path")
                 git_path = find_executable(GIT_PATHS, "git")
+            if not git_path:
+                logging.error("could not find git in common locations")
+                raise FileNotFoundError("git not found")
+
             logging.info("Using this path to git: %s", git_path)
 
             result = subprocess.run(
