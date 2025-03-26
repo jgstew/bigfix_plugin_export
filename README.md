@@ -28,7 +28,7 @@ You can also just invoke it directly on the command line as well, like:
 
 `python export_all_sites_plugin.py -besserver %BESHTTP% -r %RESTURL% -u %MOUSERNAME% -p %MOPASSWORD% -v -d`
 
-You would need to substitute the variables in the %% for the actual values of the connection details and account you wish to use.
+You would need to substitute the variables in the %% for the actual values of the connection details and account you wish to use if invoking on the command line interactively. You do not need to do this when it is being used as a plugin.
 
 ---
 
