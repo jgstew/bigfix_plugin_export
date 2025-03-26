@@ -27,9 +27,6 @@ import besapi
 import besapi.plugin_utilities
 
 __version__ = "1.1.1"
-verbose = 0
-bes_conn = None
-invoke_folder = None
 
 GIT_PATHS = [r"C:\Program Files\Git\bin\git.exe", "/usr/bin/git"]
 
@@ -109,8 +106,6 @@ def main():
     # allow unknown args to be parsed instead of throwing an error:
     args, _unknown = parser.parse_known_args()
 
-    # allow set global scoped vars
-    global bes_conn, verbose, invoke_folder
     verbose = args.verbose
 
     # get folder the script was invoked from:
