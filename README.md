@@ -42,6 +42,8 @@ To setup as a bigfix server plugin service on the BigFix root server:
   - Windows: `C:\Program Files (x86)\BigFix Enterprise\BES Server\Applications\export_all_sites`
   - Linux: `/var/opt/BESServer/Applications/export_all_sites`
 - Put python script or binary in that folder
+- Clone git repo to subfolder of export_all_sites that the export will happen in
+  - Needs to be done as the same user the server plugin service runs under
 - create a definition file in the config folder (see examples in src)
   - Windows: `C:\Program Files (x86)\BigFix Enterprise\BES Server\Applications\Config`
   - Linux: `/var/opt/BESServer/Applications`
